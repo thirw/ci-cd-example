@@ -9,7 +9,7 @@ jobs:
       - name: androidReleaseDir
         value: $(build.artifactStagingDirectory)/build/app/outputs/flutter-apk
       - name: apkFile
-        value: $(androidReleaseDir)/app-dev-release.apk
+        value: $(androidReleaseDir)/app-release.apk
       - group: firebase-distribution
       - name: firebaseAppID
         value: $[variables.APP_ID]
