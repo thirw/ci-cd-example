@@ -59,5 +59,4 @@ jobs:
             firebase appdistribution:distribute "$(apkFile)" \
               --app $(firebaseAppID) \
               --release-notes "Test deploy with Azure pipline" \
-#              --groups "beta-testers" \
               --token $(firebaseToken)
