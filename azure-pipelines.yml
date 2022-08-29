@@ -35,7 +35,7 @@ jobs:
         inputs:
           target: 'apk'
           buildFlavour: dev
-          entryPoint: "lib/main_dev.dart"
+          entryPoint: "lib/main.dart"
           projectDirectory: '$(Build.SourcesDirectory)'
 
       - task: CopyFiles@2
