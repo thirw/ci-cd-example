@@ -1,0 +1,63 @@
+trigger:
+  - main
+
+jobs:
+  - job: android
+    pool:
+      vmImage: "macos-latest"
+    variables:
+      - name: androidReleaseDir
+        value: $(build.artifactStagingDirectory)/build/app/outputs/flutter-apk
+      - name: apkFile
+        value: $(androidReleaseDir)/app-dev-release.apk
+      - group: firebase-distribution
+      - name: firebaseAppID
+        value: $[variables.APP_ID]
+      - name: firebaseToken
+        value: $[variables.TOKEN]
+
+    steps:
+      - task: FlutterInstall@0
+        displayName: "Install Flutter"
+        inputs:
+          mode: 'auto'
+          channel: 'stable'
+          version: 'latest'
+          
+      - task: JavaToolInstaller@0
+        inputs:
+          versionSpec: '11'
+          jdkArchitectureOption: 'x64'
+          jdkSourceOption: 'PreInstalled'
+
+      - task: FlutterBuild@0
+        displayName: "Build application"
+        inputs:
+          target: 'apk'
+          buildFlavour: dev
+          entryPoint: "lib/main_dev.dart"
+          projectDirectory: '$(Build.SourcesDirectory)'
+
+      - task: CopyFiles@2
+        displayName: "Copy apk to artifact directory"
+        inputs:
+          contents: "**/*.apk"
+          targetFolder: "$(build.artifactStagingDirectory)"
+
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "16.x"
+        displayName: "Install Node.js"
+
+      - task: CmdLine@2
+        displayName: "Upload to firebase app distribution"
+        inputs:
+          targetType: "inline"
+          script: |
+            npm i -g firebase-tools
+            ls -la $(androidReleaseDir)
+            firebase appdistribution:distribute "$(apkFile)" \
+              --app $(firebaseAppID) \
+              --release-notes "Test deploy with Azure pipline" \
+              --groups "beta-testers" \
+              --token $(firebaseToken)
