@@ -34,7 +34,7 @@ jobs:
         displayName: "Build application"
         inputs:
           target: 'apk'
-          buildFlavour: dev
+#          buildFlavour: dev
           entryPoint: "lib/main.dart"
           projectDirectory: '$(Build.SourcesDirectory)'
 
