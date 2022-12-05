@@ -1,5 +1,7 @@
 trigger:
-  - master
+  branches:
+    include:
+      - master
   paths:
     include:
       - android
@@ -28,7 +30,7 @@ jobs:
           mode: 'auto'
           channel: 'stable'
           version: 'latest'
-          
+
       - task: JavaToolInstaller@0
         inputs:
           versionSpec: '11'
@@ -39,7 +41,7 @@ jobs:
         displayName: "Build application"
         inputs:
           target: 'apk'
-#          buildFlavour: dev
+          #          buildFlavour: dev
           entryPoint: "lib/main.dart"
           projectDirectory: '$(Build.SourcesDirectory)'
 
